@@ -1,4 +1,4 @@
-package onvif
+package go_onvif
 
 import (
 	"encoding/json"

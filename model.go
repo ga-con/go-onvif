@@ -1,4 +1,4 @@
-package onvif
+package go_onvif
 
 // Device contains data of ONVIF camera
 type Device struct {
@@ -101,6 +101,14 @@ type MediaProfile struct {
 
 // MediaURI contains streaming URI of an ONVIF camera
 type MediaURI struct {
+	URI                 string
+	Timeout             string
+	InvalidAfterConnect bool
+	InvalidAfterReboot  bool
+}
+
+// SnapshotURI contains snapshot URI of an ONVIF camera
+type SnapshotURI struct {
 	URI                 string
 	Timeout             string
 	InvalidAfterConnect bool

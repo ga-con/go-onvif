@@ -1,4 +1,4 @@
-package onvif
+package go_onvif
 
 import (
 	"errors"
@@ -35,7 +35,8 @@ func StartDiscovery(duration time.Duration) ([]Device, error) {
 
 	// Discover device on each interface's network
 	for _, ipAddr := range ipAddrs {
-		devices, err := discoverDevices(ipAddr, duration)
+		println("DiscoverDevices:", ipAddr)
+		devices, err := DiscoverDevices(ipAddr, duration)
 		if err != nil {
 			return []Device{}, err
 		}
@@ -46,9 +47,10 @@ func StartDiscovery(duration time.Duration) ([]Device, error) {
 	return discoveryResults, nil
 }
 
-func discoverDevices(ipAddr string, duration time.Duration) ([]Device, error) {
+func DiscoverDevices(ipAddr string, duration time.Duration) ([]Device, error) {
 	// Create WS-Discovery request
-	requestID := "uuid:" + uuid.NewV4().String()
+	newUuid, _ := uuid.NewV4()
+	requestID := "uuid:" + newUuid.String()
 	request := `		
 		<?xml version="1.0" encoding="UTF-8"?>
 		<e:Envelope

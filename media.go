@@ -1,4 +1,4 @@
-package onvif
+package go_onvif
 
 var mediaXMLNs = []string{
 	`xmlns:trt="http://www.onvif.org/ver10/media/wsdl"`,
@@ -148,6 +148,42 @@ func (device Device) GetStreamURI(profileToken, protocol string) (MediaURI, erro
 
 	// Parse interface to struct
 	streamURI := MediaURI{}
+	if mapURI, ok := ifaceURI.(map[string]interface{}); ok {
+		streamURI.URI = interfaceToString(mapURI["Uri"])
+		streamURI.Timeout = interfaceToString(mapURI["Timeout"])
+		streamURI.InvalidAfterConnect = interfaceToBool(mapURI["InvalidAfterConnect"])
+		streamURI.InvalidAfterReboot = interfaceToBool(mapURI["InvalidAfterReboot"])
+	}
+
+	return streamURI, nil
+}
+
+
+
+// GetSnapshotURI fetch snapshot URI of a media profile.
+func (device Device) GetSnapshotURI(profileToken string) (SnapshotURI, error) {
+	// Create SOAP
+	soap := SOAP{
+		XMLNs: mediaXMLNs,
+		Body: `<trt:GetSnapshotUri>
+			<trt:ProfileToken>` + profileToken + `</trt:ProfileToken>
+		</trt:GetSnapshotUri>`,
+	}
+
+	// Send SOAP request
+	response, err := soap.SendRequest(device.XAddr)
+	if err != nil {
+		return SnapshotURI{}, err
+	}
+
+	// Parse response to interface
+	ifaceURI, err := response.ValueForPath("Envelope.Body.GetSnapshotUriResponse.MediaUri")
+	if err != nil {
+		return SnapshotURI{}, err
+	}
+
+	// Parse interface to struct
+	streamURI := SnapshotURI{}
 	if mapURI, ok := ifaceURI.(map[string]interface{}); ok {
 		streamURI.URI = interfaceToString(mapURI["Uri"])
 		streamURI.Timeout = interfaceToString(mapURI["Timeout"])
