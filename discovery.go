@@ -49,7 +49,7 @@ func StartDiscovery(duration time.Duration) ([]Device, error) {
 
 func DiscoverDevices(ipAddr string, duration time.Duration) ([]Device, error) {
 	// Create WS-Discovery request
-	newUuid, _ := uuid.NewV4()
+	newUuid := uuid.NewV4()
 	requestID := "uuid:" + newUuid.String()
 	request := `		
 		<?xml version="1.0" encoding="UTF-8"?>

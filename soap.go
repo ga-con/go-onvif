@@ -105,7 +105,7 @@ func (soap SOAP) createRequest() string {
 }
 
 func (soap SOAP) createUserToken() string {
-	newUuid, _ := uuid.NewV4()
+	newUuid := uuid.NewV4()
 	nonce := newUuid.Bytes()
 	nonce64 := base64.StdEncoding.EncodeToString(nonce)
 	timestamp := time.Now().Add(soap.TokenAge).UTC().Format(time.RFC3339)
